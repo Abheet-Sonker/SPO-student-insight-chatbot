@@ -12,6 +12,10 @@ import zipfile
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY", "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")
 
+client_settings = Settings(
+    chroma_db_impl="duckdb+parquet",
+    persist_directory=chroma_path
+)
 # Load embedding model
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
@@ -21,8 +25,9 @@ chroma_path = "chroma_db_insights"
 
 # Load Chroma vectorstore
 vectorstore = Chroma(
+    embedding_function=embedding_model,
     persist_directory=chroma_path,
-    embedding_function=embedding_model
+    client_settings=client_settings
 )
 
 # Create retriever
