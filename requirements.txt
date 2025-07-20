@@ -1,8 +1,19 @@
+# Core packages
 streamlit
-python-dotenv
 langchain
 langchain-community
-langchain-huggingface
-langchain-groq
+langchainhub
+chromadb
+huggingface-hub
 sentence-transformers
-faiss-cpu
+python-dotenv
+
+# LLM and Vector store
+groq  # or openai if you switch later
+tqdm
+
+# Optional but useful
+PyPDF2
+pdfplumber
+unstructured  # for better text extraction
+requests
