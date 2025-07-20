@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
@@ -16,11 +16,13 @@ groq_api_key = os.getenv("GROQ_API_KEY", "gsk_AREnFnEX257KF8MfUfWDWGdyb3FYsvNWCZ
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 # Load FAISS index
-faiss_index_path = "faiss_index_insights"
-vectorstore = FAISS.load_local(
-    folder_path=faiss_index_path,
-    embeddings=embedding_model,
-    allow_dangerous_deserialization=True
+# Path where your Chroma DB is stored
+chroma_path = "chroma_db_insights"
+
+# Load Chroma vectorstore
+vectorstore = Chroma(
+    persist_directory=chroma_path,
+    embedding_function=embedding_model
 )
 
 # Create retriever
