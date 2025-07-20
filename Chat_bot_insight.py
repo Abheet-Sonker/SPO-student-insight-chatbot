@@ -13,6 +13,7 @@ import zipfile
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY", "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")
 
+chroma_path = "chroma_db_insights"
 client_settings = Settings(
     chroma_db_impl="duckdb+parquet",
     persist_directory=chroma_path
@@ -22,7 +23,7 @@ embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-Mi
 
 # Load FAISS index
 # Path where your Chroma DB is stored
-chroma_path = "chroma_db_insights"
+
 
 # Load Chroma vectorstore
 vectorstore = Chroma(
