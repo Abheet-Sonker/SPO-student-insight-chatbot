@@ -7,13 +7,6 @@ chromadb
 huggingface-hub
 sentence-transformers
 python-dotenv
-
-# LLM and Vector store
-groq  # or openai if you switch later
+groq  
 tqdm
 
-# Optional but useful
-PyPDF2
-pdfplumber
-unstructured  # for better text extraction
-requests
