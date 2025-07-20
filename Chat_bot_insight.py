@@ -13,11 +13,13 @@ import zipfile
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY", "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")
 
-chroma_path = "chroma_db_insights"
+chroma_path = os.path.abspath("chroma_db_insights")
+
 client_settings = Settings(
     chroma_db_impl="duckdb+parquet",
-    persist_directory=chroma_path
+    persist_directory="chroma_db_insights"
 )
+
 # Load embedding model
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
