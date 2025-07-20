@@ -1,12 +1,12 @@
-import gradio as gr
 import os
+import streamlit as st
 from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
-from pyngrok import ngrok
+import zipfile
 
 # Load environment variables
 load_dotenv()
@@ -244,53 +244,42 @@ def ask_bot(company, query_types, question_text):
     sources_text = "\n---\n".join(all_sources) if all_sources else "*No source documents found.*"
     return full_response.strip()
 
-# Update company dropdown based on selection
-def update_company_list(purpose):
-    if purpose == "Placement":
-        return gr.Dropdown.update(choices=placement_company_list, value=None, interactive=True)
-    elif purpose == "Intern":
-        return gr.Dropdown.update(choices=intern_company_list, value=None, interactive=True)
-    return gr.Dropdown.update(choices=[], value=None, interactive=False)
-
-
 # --- 🧱 Gradio UI ---
-with gr.Blocks(theme=gr.themes.Soft()) as iface:
-    gr.Markdown("## 🤖 Company Interview Chatbot (IITK Insights)")
+st.set_page_config(page_title="Company Interview Chatbot", page_icon="🤖")
+st.title("🤖 Company Interview Chatbot (IITK Insights)")
 
-    with gr.Row():
-        purpose = gr.Dropdown(choices=["Placement", "Intern"], label="🎯 Purpose (Placement or Intern)",value ="Placement")
-        company_name = gr.Dropdown(choices=placement_company_list, label="🏢 Select Company", interactive=True)
+# Sidebar or inline layout
+col1, col2 = st.columns(2)
+with col1:
+    purpose = st.selectbox("🎯 Purpose (Placement or Intern)", ["Placement", "Intern"], index=0)
 
-    # Inline logic using lambda + if-else
-    purpose.change(
-        fn=lambda p: gr.update(
-            choices=placement_company_list if p == "Placement"
-            else intern_company_list if p == "Intern"
-            else [],
-            value=None,
-            interactive=True
-        ),
-        inputs=purpose,
-        outputs=company_name
-    )
+with col2:
+    company_list = placement_company_list if purpose == "Placement" else intern_company_list
+    company_name = st.selectbox("🏢 Select Company", company_list)
 
-    with gr.Row():
-        query_checkboxes = gr.CheckboxGroup(choices=["Sample Interview Questions", "Interview Process", "Resources", "Advice"], label="🔎 Select What You Want to Know")
+query_options = st.multiselect(
+    "🔎 Select What You Want to Know",
+    ["Sample Interview Questions", "Interview Process", "Resources", "Advice"]
+)
 
-    question = gr.Textbox(label="💬 Or Ask Custom Question", placeholder="e.g. Give me Sample Interview Questions for Google?", lines=1)
-    submit = gr.Button("🔍 Ask")
-    answer = gr.Markdown(label="✅ Answer")
-    sources = gr.Markdown(label="📚 Source Documents")
+if st.button("🔍 Ask"):
+    final_query = ""
 
-    submit.click(
-        fn=ask_bot,
-        inputs=[company_name, query_checkboxes, question],
-        outputs=[answer]
-    )
+    if query_options:
+        final_query += f"{', '.join(query_options)} for {company_name}. "
 
+    if question.strip():
+        final_query += question.strip()
 
-# --- 🚀 Launch ---
-if __name__ == "__main__":
-    public_url = ngrok.connect(7860)
-    print("🔗 Public URL:", public_url)
-    iface.launch(share=True)
+    if not final_query:
+        st.warning("Please select options or enter a custom question.")
+    else:
+        with st.spinner("Thinking..."):
+            result = qa_chain.invoke({"query": final_query})
+            st.markdown("### ✅ Answer")
+            st.success(result["result"])
+
+            st.markdown("### 📚 Source Documents")
+            for doc in result["source_documents"]:
+                st.markdown(f"**Source**: {doc.metadata.get('source', 'N/A')}")
+                st.markdown(doc.page_content[:500] + "...")
