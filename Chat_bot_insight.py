@@ -272,6 +272,7 @@ query_options = st.multiselect(
     "🔎 Select What You Want to Know",
     ["Sample Interview Questions", "Interview Process", "Resources", "Advice"]
 )
+question = st.text_input("❓ Ask a custom question (optional)")
 
 if st.button("🔍 Ask"):
     final_query = ""
