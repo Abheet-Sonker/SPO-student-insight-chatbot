@@ -1,4 +1,6 @@
 import os
+os.environ["CHROMA_DB_IMPL"] = "duckdb+parquet"
+
 import streamlit as st
 from dotenv import load_dotenv
 from langchain_community.vectorstores import Chroma
