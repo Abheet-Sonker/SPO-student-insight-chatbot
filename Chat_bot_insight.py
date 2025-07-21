@@ -15,22 +15,15 @@ import zipfile
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY", "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")
 
-# chroma_path = "./chroma_db_insights"
-
-# client_settings = Settings(chroma_db_impl="duckdb+parquet", anonymized_telemetry=False)
-
 # Load embedding model
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-
-# Load FAISS index
-# Path where your Chroma DB is stored
-
 
 # Load Chroma vectorstore
 vectorstore = FAISS.load_local(
     folder_path="faiss_index_insights",
     embeddings=embedding_model,
 )
+
 # Create retriever
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 
