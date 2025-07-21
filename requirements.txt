@@ -3,7 +3,7 @@ streamlit
 langchain
 langchain-community
 langchainhub
-chromadb
+chromadb>=0.4.22
 huggingface-hub
 sentence-transformers
 python-dotenv
