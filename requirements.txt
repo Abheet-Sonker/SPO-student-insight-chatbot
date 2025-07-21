@@ -11,4 +11,4 @@ groq
 tqdm
 langchain-huggingface
 langchain-groq
-
+faiss-cpu
