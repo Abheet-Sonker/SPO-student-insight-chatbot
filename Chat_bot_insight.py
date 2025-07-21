@@ -5,7 +5,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain_community.vectorstores import Chroma, FAISS
 # from chromadb.config import Settings
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceInferenceAPIEmbeddings
 from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
@@ -16,9 +16,9 @@ load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY", "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")
 
 # Load embedding model
-embedding_model = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2",
-    model_kwargs={"device": "cpu"}
+embedding_model = HuggingFaceInferenceAPIEmbeddings(
+    api_key="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",
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
 # Load Chroma vectorstore
