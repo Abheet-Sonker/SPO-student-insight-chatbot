@@ -10,4 +10,5 @@ python-dotenv
 groq  
 tqdm
 langchain-huggingface
+langchain-groq
 
