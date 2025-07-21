@@ -2,7 +2,7 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 from langchain_community.vectorstores import Chroma
-# from chromadb.config import Settings
+from chromadb.config import Settings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
@@ -15,10 +15,11 @@ groq_api_key = os.getenv("GROQ_API_KEY", "gsk_AREnFnEX257KF8MfUfWDWGdyb3FYsvNWCZ
 
 chroma_path = os.path.abspath("chroma_db_insights")
 
-# client_settings = Settings(
-#     chroma_db_impl="duckdb+parquet",
-#     persist_directory="chroma_db_insights"
-# )
+client_settings = Settings(
+    chroma_db_impl="duckdb",
+    persist_directory=chroma_path,
+    anonymized_telemetry=False,
+)
 
 # Load embedding model
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
@@ -31,9 +32,8 @@ embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-Mi
 vectorstore = Chroma(
     embedding_function=embedding_model,
     persist_directory=chroma_path,
-    # client_settings=client_settings
+    client_settings=client_settings
 )
-
 # Create retriever
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 
