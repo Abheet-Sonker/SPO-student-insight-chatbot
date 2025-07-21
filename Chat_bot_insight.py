@@ -17,11 +17,7 @@ groq_api_key = os.getenv("GROQ_API_KEY", "gsk_AREnFnEX257KF8MfUfWDWGdyb3FYsvNWCZ
 
 chroma_path = "./chroma_db_insights"
 
-client_settings = Settings(
-    chroma_db_impl="duckdb+parquet",
-    persist_directory=chroma_path,
-    anonymized_telemetry=False,
-)
+client_settings = Settings(chroma_db_impl="duckdb+parquet", anonymized_telemetry=False)
 
 # Load embedding model
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
@@ -31,11 +27,7 @@ embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-Mi
 
 
 # Load Chroma vectorstore
-vectorstore = Chroma(
-    embedding_function=embedding_model,
-    persist_directory=chroma_path,
-    client_settings=client_settings
-)
+vectorstore = Chroma(embedding_function=embedding_model, client_settings=client_settings)
 # Create retriever
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 
