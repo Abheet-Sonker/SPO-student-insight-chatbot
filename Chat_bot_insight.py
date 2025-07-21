@@ -20,7 +20,7 @@ embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-Mi
 
 # Load Chroma vectorstore
 vectorstore = FAISS.load_local(
-    folder_path="faiss_index_insights",
+    folder_path="./faiss_index_insights",
     embeddings=embedding_model,
 )
 
