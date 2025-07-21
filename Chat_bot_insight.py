@@ -4,7 +4,7 @@ os.environ["CHROMA_DB_IMPL"] = "duckdb+parquet"
 import streamlit as st
 from dotenv import load_dotenv
 from langchain_community.vectorstores import Chroma, FAISS
-from chromadb.config import Settings
+# from chromadb.config import Settings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
@@ -15,9 +15,9 @@ import zipfile
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY", "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")
 
-chroma_path = "./chroma_db_insights"
+# chroma_path = "./chroma_db_insights"
 
-client_settings = Settings(chroma_db_impl="duckdb+parquet", anonymized_telemetry=False)
+# client_settings = Settings(chroma_db_impl="duckdb+parquet", anonymized_telemetry=False)
 
 # Load embedding model
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
