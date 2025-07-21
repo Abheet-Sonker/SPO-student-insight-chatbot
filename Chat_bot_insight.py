@@ -3,7 +3,7 @@ os.environ["CHROMA_DB_IMPL"] = "duckdb+parquet"
 
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma, FAISS
 from chromadb.config import Settings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
@@ -27,7 +27,10 @@ embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-Mi
 
 
 # Load Chroma vectorstore
-vectorstore = Chroma(embedding_function=embedding_model, client_settings=client_settings)
+vectorstore = FAISS.load_local(
+    folder_path="./faiss_index_insights",
+    embeddings=embedding_model,
+)
 # Create retriever
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 
