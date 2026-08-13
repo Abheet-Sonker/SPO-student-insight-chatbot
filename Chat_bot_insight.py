@@ -10,9 +10,9 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-# Load environment variables
-load_dotenv()
-groq_api_key = os.getenv("GROQ_API_KEY", "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")
+# # Load environment variables
+# load_dotenv()
+# groq_api_key = "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"
 
 # Load embedding model locally (avoids Hugging Face API connection and DNS resolution errors)
 embedding_model = HuggingFaceEmbeddings(
@@ -49,7 +49,7 @@ prompt = PromptTemplate.from_template(prompt_template)
 llm = ChatGroq(
     temperature=0.1,
     model_name="llama-3.1-8b-instant",
-    groq_api_key="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"
+    groq_api_key="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"
 )
 
 # Format documents helper
