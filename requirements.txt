@@ -1,14 +1,11 @@
-# Core packages
 streamlit
+python-dotenv
 langchain
 langchain-community
-langchainhub
-chromadb>=0.4.22
-huggingface-hub
-sentence-transformers
-python-dotenv
-groq  
-tqdm
+langchain-core
 langchain-huggingface
 langchain-groq
 faiss-cpu
+sentence-transformers
+torch
+torchvision
