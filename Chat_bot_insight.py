@@ -46,7 +46,7 @@ prompt = PromptTemplate.from_template(prompt_template)
 # Load LLM
 llm = ChatGroq(
     temperature=0.1,
-    model_name="llama3-8b-8192",
+    model_name="llama-3.1-8b-instant",
     groq_api_key="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"
 )
 
