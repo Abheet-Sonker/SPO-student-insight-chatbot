@@ -4,7 +4,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -14,9 +14,8 @@ from langchain_core.runnables import RunnablePassthrough
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY", "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")
 
-# Load embedding model
-embedding_model = HuggingFaceInferenceAPIEmbeddings(
-    api_key="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",
+# Load embedding model locally (avoids Hugging Face API connection and DNS resolution errors)
+embedding_model = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
@@ -50,7 +49,7 @@ prompt = PromptTemplate.from_template(prompt_template)
 llm = ChatGroq(
     temperature=0.1,
     model_name="llama-3.1-8b-instant",
-    groq_api_key=groq_api_key
+    groq_api_key="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"
 )
 
 # Format documents helper
@@ -112,6 +111,32 @@ intern_company_list = [
 ]
 
 query_types = ["Sample Interview Questions", "Interview Process", "Resources", "Advice"]
+
+# Chatbot function
+def ask_bot(company, query_types, question_text):
+    if not company:
+        return "❗ Please select a company.", ""
+
+    if query_types:
+        questions = [f"Give me {qt.lower()} only for {company} , Dont give for any other company." for qt in query_types]
+    elif question_text.strip():
+        questions = [question_text]
+    else:
+        return "❗ Please select a query type or enter a question.", ""
+
+    full_response = ""
+    all_sources = set()
+
+    for q in questions:
+        answer = rag_chain.invoke(q)
+        source_docs = retriever.invoke(q)
+        
+        full_response += f"**Q: {q}**\n{answer}\n\n"
+        for doc in source_docs:
+            all_sources.add(doc.page_content.strip())
+
+    sources_text = "\n---\n".join(all_sources) if all_sources else "*No source documents found.*"
+    return full_response.strip(), sources_text
 
 # --- Streamlit UI ---
 st.set_page_config(page_title="Company Interview Chatbot", page_icon="🤖")
