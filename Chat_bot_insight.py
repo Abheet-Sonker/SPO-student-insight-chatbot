@@ -49,7 +49,7 @@ prompt = PromptTemplate.from_template(prompt_template)
 
 # Load LLM (Google Gemini)
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
+    model="gemini-3.5-flash",
     temperature=0.1,
     google_api_key=google_api_key
 )
