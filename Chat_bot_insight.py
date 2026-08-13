@@ -5,16 +5,18 @@ from dotenv import load_dotenv
 
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-# # Load environment variables
-# load_dotenv()
-# groq_api_key = "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"
+# Load environment variables
+load_dotenv()
 
-# Load embedding model locally (avoids Hugging Face API connection and DNS resolution errors)
+# Set up Google Gemini API Key
+google_api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyAKzW75j_myo3uYHmZo6mAnau9eR-X20OQ")
+
+# Load embedding model locally
 embedding_model = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
@@ -45,11 +47,11 @@ Question: {question}
 """
 prompt = PromptTemplate.from_template(prompt_template)
 
-# Load LLM
-llm = ChatGroq(
+# Load LLM (Google Gemini)
+llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
     temperature=0.1,
-    model_name="llama-3.1-8b-instant",
-    groq_api_key="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"
+    google_api_key=google_api_key
 )
 
 # Format documents helper
